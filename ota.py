@@ -13,11 +13,14 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.003'
+version = '00.00.004'
 date = '12.04.2023'
 author = 'Peter Stöck'
 
 # Versionen:
+# 00.00.004:
+# Die Versionsnummer der vorhandenen Version wird geholt.
+#
 # 00.00.003:
 # Versionsnummerabfrage bei Github wurde in try: / except: gesetzt
 #
@@ -82,3 +85,8 @@ except:
 # Aktuelle Version aus current_version.py holen:
 ##################################################
 
+f = open('current_version.py','r')
+current_version = f.read()
+f.close()
+current_version = current_version.replace("\r\n", "")
+print(current_version)
