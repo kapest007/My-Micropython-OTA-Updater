@@ -13,4 +13,6 @@ wird diese heruntergeladen und als **main.py** gespeichert.
 
 ## Entwicklungsverlauf:
 Ich entwickle das Programm für den Einsatz mit M5Stack-Geräten. Hier konkret mit einem M5Stick C Plus.
-Offenbar hat das Micropython von 5Stack Probleme mit httpclient.py von Ronald Dehuysser. Deshalb versuche ich jetzt den Internetzugang mit den M5Stack spezifischen Möglichkeiten zu realisieren.
+Offenbar hat das Micropython von 5Stack Probleme mit httpclient.py von Ronald Dehuysser. 
+Deshalb versuche ich jetzt den Internetzugang mit den M5Stack spezifischen Möglichkeiten zu realisieren.
+Die Version von latest von Github zu holen klappt jetzt.

@@ -13,11 +13,14 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.002'
+version = '00.00.003'
 date = '12.04.2023'
 author = 'Peter Stöck'
 
 # Versionen:
+# 00.00.003:
+# Versionsnummerabfrage bei Github wurde in try: / except: gesetzt
+#
 # 00.00.002:
 # Die aktuelle Version holen.
 # mit der Github-Version vergleichen.
@@ -64,12 +67,16 @@ else:
 
 # Der Weg aus UIFlow:
 # So funktioniert es: user-agent ist erforderlich!
-req = urequests.request(method='GET', url='https://api.github.com/repos/kapest007/HOME_Markiese/releases/latest', headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
-gh_json = json.loads((req.text))  # Die Daten liegen als JSON vor.
-github_version = gh_json['tag_name']
+try:
+    req = urequests.request(method='GET', url='https://api.github.com/repos/kapest007/HOME_Markiese/releases/latest', headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
+    gh_json = json.loads((req.text))  # Die Daten liegen als JSON vor.
+    github_version = gh_json['tag_name']
+    print(github_version)
+except:
+    print('Latest Version konnte nicht geholt werden.')
 
 
-print(github_version)
+
 
 ##################################################
 # Aktuelle Version aus current_version.py holen:
