@@ -76,7 +76,7 @@ try:
     github_version = gh_json['tag_name']
     print(github_version)
 except:
-    print('Latest Version konnte nicht geholt werden.')
+    print('Latest Version konnte nicht geholt werden!')
 
 
 
@@ -85,8 +85,11 @@ except:
 # Aktuelle Version aus current_version.py holen:
 ##################################################
 
-f = open('current_version.py','r')
-current_version = f.read()
-f.close()
-current_version = current_version.replace("\r\n", "")
-print(current_version)
+try:
+    f = open('current_version.py','r')
+    current_version = f.read()
+    f.close()
+    current_version = current_version.replace("\r\n", "")
+    print(current_version)
+except:
+    print('Aktuelle Versionsnummer wurde nicht gefunden!')
