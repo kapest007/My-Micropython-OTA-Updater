@@ -1,0 +1,102 @@
+[
+    {'type': 'file', 
+     '_links': {'html': 'https://github.com/kapest007/HOME_Markiese/blob/master/.gitignore', 
+                'self': 'https://api.github.com/repos/kapest007/HOME_Markiese/contents/.gitignore?ref=master', 'git': 'https://api.github.com/repos/kapest007/HOME_Markiese/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391'},
+      'path': '.gitignore', 'size': 0, 'name': '.gitignore', 'git_url': 'https://api.github.com/repos/kapest007/HOME_Markiese/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391', 'html_url': 'https://github.com/kapest007/HOME_Markiese/blob/master/.gitignore', 'download_url': 'https://raw.githubusercontent.com/kapest007/HOME_Markiese/master/.gitignore', 'url': 'https://api.github.com/repos/kapest007/HOME_Markiese/contents/.gitignore?ref=master', 'sha': 'e69de29bb2d1d6434b8b29ae775ad8c2e48c5391'},
+    {'type': 'dir', '_links':
+     {'html': 'https://github.com/kapest007/HOME_Markiese/tree/master/App', 'self': 'https://api.github.com/repos/kapest007/HOME_Markiese/contents/App?ref=master', 'git': 'https://api.github.com/repos/kapest007/HOME_Markiese/git/trees/106a06534da45202ebbea3cbd31a0e09952ee674'},
+     'path': 'App', 'size': 0, 'name': 'App', 'git_url': 'https://api.github.com/repos/kapest007/HOME_Markiese/git/trees/106a06534da45202ebbea3cbd31a0e09952ee674', 'html_url': 'https://github.com/kapest007/HOME_Markiese/tree/master/App', 'download_url': None, 'url': 'https://api.github.com/repos/kapest007/HOME_Markiese/contents/App?ref=master', 'sha': '106a06534da45202ebbea3cbd31a0e09952ee674'},
+    {'type': 'file', '_links': {'html': 'https://github.com/kapest007/HOME_Markiese/blob/master/README.md', 'self': 'https://api.github.com/repos/kapest007/HOME_Markiese/contents/README.md?ref=master', 'git': 'https://api.github.com/repos/kapest007/HOME_Markiese/git/blobs/bc4355d72cc992ef879b32e00beee7cb19dd331e'},
+     'path': 'README.md', 'size': 178, 'name': 'README.md', 'git_url': 'https://api.github.com/repos/kapest007/HOME_Markiese/git/blobs/bc4355d72cc992ef879b32e00beee7cb19dd331e', 'html_url': 'https://github.com/kapest007/HOME_Markiese/blob/master/README.md', 'download_url': 'https://raw.githubusercontent.com/kapest007/HOME_Markiese/master/README.md', 'url': 'https://api.github.com/repos/kapest007/HOME_Markiese/contents/README.md?ref=master', 'sha': 'bc4355d72cc992ef879b32e00beee7cb19dd331e'}]
+
+Hier ist der Weg:
+
+>>> url = 'https://api.github.com/repos/kapest007/HOME_Markiese/contents'
+>>> y = urequests.request(method='GET', url=url, headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
+>>> y_json = json.loads(y.text)
+>>> y_json
+[
+    {'type': 'file',
+     '_links': {'html': 'https://github.com/kapest007/HOME_Markiese/blob/master/.gitignore',
+                'self': 'https://api.github.com/repos/kapest007/HOME_Markiese/contents/.gitignore?ref=master',
+                'git': 'https://api.github.com/repos/kapest007/HOME_Markiese/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391'
+                },
+     'path': '.gitignore', 
+     'size': 0, 
+     'name': '.gitignore', 
+     'git_url': 'https://api.github.com/repos/kapest007/HOME_Markiese/git/blobs/e69de29bb2d1d6434b8b29ae775ad8c2e48c5391', 
+     'html_url': 'https://github.com/kapest007/HOME_Markiese/blob/master/.gitignore', 
+     'download_url': 'https://raw.githubusercontent.com/kapest007/HOME_Markiese/master/.gitignore',
+     'url': 'https://api.github.com/repos/kapest007/HOME_Markiese/contents/.gitignore?ref=master', 
+     'sha': 'e69de29bb2d1d6434b8b29ae775ad8c2e48c5391'
+    },   
+    {'type': 'dir', 
+     '_links': {'html': 'https://github.com/kapest007/HOME_Markiese/tree/master/App', 
+                'self': 'https://api.github.com/repos/kapest007/HOME_Markiese/contents/App?ref=master', 
+                'git': 'https://api.github.com/repos/kapest007/HOME_Markiese/git/trees/106a06534da45202ebbea3cbd31a0e09952ee674'
+               }, 
+     'path': 'App', 
+     'size': 0, 
+     'name': 'App', 
+     'git_url': 'https://api.github.com/repos/kapest007/HOME_Markiese/git/trees/106a06534da45202ebbea3cbd31a0e09952ee674', 
+     'html_url': 'https://github.com/kapest007/HOME_Markiese/tree/master/App', 
+     'download_url': None, 
+     'url': 'https://api.github.com/repos/kapest007/HOME_Markiese/contents/App?ref=master', 
+     'sha': '106a06534da45202ebbea3cbd31a0e09952ee674'
+    }, 
+    {'type': 'file', 
+     '_links': {'html': 'https://github.com/kapest007/HOME_Markiese/blob/master/README.md', 
+                'self': 'https://api.github.com/repos/kapest007/HOME_Markiese/contents/README.md?ref=master', 
+                'git': 'https://api.github.com/repos/kapest007/HOME_Markiese/git/blobs/bc4355d72cc992ef879b32e00beee7cb19dd331e'
+               }, 
+     'path': 'README.md', 
+     'size': 178, 
+     'name': 'README.md', 
+     'git_url': 'https://api.github.com/repos/kapest007/HOME_Markiese/git/blobs/bc4355d72cc992ef879b32e00beee7cb19dd331e', 
+     'html_url': 'https://github.com/kapest007/HOME_Markiese/blob/master/README.md', 
+     'download_url': 'https://raw.githubusercontent.com/kapest007/HOME_Markiese/master/README.md', 
+     'url': 'https://api.github.com/repos/kapest007/HOME_Markiese/contents/README.md?ref=master', 
+     'sha': 'bc4355d72cc992ef879b32e00beee7cb19dd331e'
+    }
+]
+
+
+>>> y = urequests.request(method='GET', url='https://api.github.com/repos/kapest007/HOME_Markiese/contents/App?ref=master', headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
+>>> y
+<Response object at 3ffccfd0>
+>>> y.text
+'[
+    {"name":"Home_Markiese.py",
+     "path":"App/Home_Markiese.py",
+     "sha":"5719e4bd81b222e9012ae1a87f98b2e1660b6088",
+     "size":3818,
+     "url":"https://api.github.com/repos/kapest007/HOME_Markiese/contents/App/Home_Markiese.py?ref=master",
+     "html_url":"https://github.com/kapest007/HOME_Markiese/blob/master/App/Home_Markiese.py",
+     "git_url":"https://api.github.com/repos/kapest007/HOME_Markiese/git/blobs/5719e4bd81b222e9012ae1a87f98b2e1660b6088",
+     "download_url":"https://raw.githubusercontent.com/kapest007/HOME_Markiese/master/App/Home_Markiese.py",
+     "type":"file",
+     "_links":{"self":"https://api.github.com/repos/kapest007/HOME_Markiese/contents/App/Home_Markiese.py?ref=master",
+               "git":"https://api.github.com/repos/kapest007/HOME_Markiese/git/blobs/5719e4bd81b222e9012ae1a87f98b2e1660b6088",
+               "html":"https://github.com/kapest007/HOME_Markiese/blob/master/App/Home_Markiese.py"
+              }
+    }
+]'
+>>> y = urequests.request(method='GET', url='https://raw.githubusercontent.com/kapest007/HOME_Markiese/master/App/Home_Markiese.py', headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
+>>> y.text
+[object_link_for_thonny=1073507232]'
+# Home_Markiese\n
+# Programm f\xfcr die Sensorstation an der Markiese.\n
+# Es misst die Aussentemperatur und Steuert die Markiese.\n\n
+
+# Version 00.00.006\n# Es wird eine Webseite f\xfcr restart eingerichtet.\n
+# machine.reset()\n# und eine Seite zur Temperaturabfrage.\n
+# /date modifiziert\n\n
+
+name = \'Home_Markiese.py\'\n
+version = \'00.00.006\'\n
+date = \'10.04.2023\'\n
+author = \'Peter St\xf6ck\'\n\n\
+
+'\'\'\n
+Befehle:\nMar_Ein   - Markiese einfahren\nMar_Aus  - Markiese ausfahren\nMar_Stop - Markiese Stop\nMar_Ver   - Softwareversion\nMar_Dbg  - Debug-Modue einstellen\nMar_Std   - Standard-Modus einstellen\nMar_Res  - System neu starten\n\'\'\'\n\n\'\'\'\nDaten f\xfcr das ATOM HUB AC/DC\nRemote Control Switch Kit\nRelais_1 = 22\nRelais_2 = 19\nRX          = 33\nTX           = 23\nSDA        = 25\nSCL        = 21\n\'\'\'\n\nfrom m5stack import *\nfrom m5ui import *\nfrom uiflow import *\nimport machine\nimport time\nimport unit\n\nimport network\nimport MicroWebSrv.microWebSrv as mws\nfrom wlansecrets import SSID, PW\n\nenv2_0 = unit.get(unit.ENV2, unit.PORTA)\n\ncommand = None\nits_weather_time = None\nlfd_nr = None\ncommand_received = None\nwetter = None\nlfd_nr_max = None\nwetter_takt = None\nmakiese_aktiv = None\nstatus = None\nmessage = None\nrelais_1 = None\nmarkiese_stop_zeit = None\nrelais_2 = None\nrelais_3 = None\naussen_temp = None\n\n####################################\n# Wlan einrichten und verbinden:\n####################################\n\nwlan = network.WLAN(network.STA_IF)\nwlan.active(True)\n\nwlan.connect(SSID, PW)\n\nwhile not wlan.isconnected():\n    time.sleep(1)\nelse:\n    lcd.setRotation(3)\n    print(wlan.ifconfig()[0])\n\n\n\n\n# Aktionen von MicroWebSrv erstellen\n    \ndef neustart(httpClient, httpResponse):\n    content = """\\\n    <!DOCTYPE html>\n    <html lang=de>\n      <head>\n      </head>\n      <body>\n        <h1>Ger\xe4te wird neu gestartet.</h1>\n      </body>\n    </html>\n    """ .format()\n    httpResponse.WriteResponseOk( headers = None, contentType = "text/html",\n                                  contentCharset = "UTF-8", content = content)\n    time.sleep(1)      # ohne sleep kein responce\n    machine.reset()\n    \n\ndef show_status(httpClient, httpResponse):\n    content = """\\\n    <!DOCTYPE html>\n    <html lang=de>\n      <head>\n        <meta http-equiv="refresh" content="5">\n      </head>\n      <body>\n        <h1>Wettersensor an der Markiese</h1>\n        Softwarename: {}\n         </br>\n        Softwareversion: {}\n        </br>\n        <h2>Aktuelle Temperatur: {} \xb0C</h2>\n        <h2>Aktueller Luftdruck: {} mm</h2>\n        <h2>Aktuelle Luftfeuchte: {} %</h2>\n      </body>\n    </html>\n    """ .format(name, version, env2_0.temperature, env2_0.pressure, env2_0.humidity\n)\n    httpResponse.WriteResponseOk( headers = None, contentType = "text/html",\n                                  contentCharset = "UTF-8", content = content)\n    \n    \nroute_handlers = [\n    ( "/restart", "GET", neustart ),\n    ( "/data", "GET", show_status )\n]\n\n# MicroWebSrv Instanz erzeugen\nsrv = mws.MicroWebSrv(routeHandlers=route_handlers)\n\n# Grafische Oberfl\xe4che gestalten\n\nlabel_name = M5TextBox(2, 0, name, lcd.FONT_DejaVu18, 0xFFFFFF, rotate=0)\nlabel_version = M5TextBox(2, 20, \'Version \' + version, lcd.FONT_DejaVu18, 0xFFFFFF, rotate=0)\nlabel_ipadress = M5TextBox(2, 40, \'IP \' + wlan.ifconfig()[0], lcd.FONT_DejaVu18, 0xFFFFFF, rotate=0)\nlabel_server_status = M5TextBox(2, 60, \'Server gestartet\', lcd.FONT_DejaVu18, 0xFFFFFF, rotate=0)\nlabel_aussen_temperatur = M5TextBox(40, 90, "label0", lcd.FONT_DejaVu40, 0xFFFFFF, rotate=0)\n\nlcd.setRotation(3)\nsetScreenColor(0x111111)\nlcd.clear()\nlabel_name.show()\nlabel_version.show()\nlabel_ipadress.show()\n\n# MicroWebSrv starten\nsrv.Start(threaded=True)\nlabel_server_status.show()\n\nwhile True:\n    aussen_temp = env2_0.temperature\n    label_aussen_temperatur.setText(str(aussen_temp))\n    label_aussen_temperatur.show()\n    time.sleep(1)\n\n'
+>>> 
