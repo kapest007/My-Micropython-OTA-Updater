@@ -13,19 +13,23 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.012'
+version = '00.00.013'
 date = '15.04.2023'
 author = 'Peter Stöck'
 
 # TODO:
-# Programmstruktur überarbeiten
+# Globale Variablen aus den Funktionen entfernen.
+# Versionsnummer aktualisieren.
 # RTC stellen.
 # log einführen - für remote Fehlermeldungen
 # Abbruchbedingung für Wlan Anmeldung
-# Versionsnummer aktualisieren.
-# Liste mit Updates bearbeiten.
+# Aufräumen. OTA-Objekte entfernen.
+
 
 # Versionen:
+# 00.00.013:
+# Überflüssigen Code entfernt
+#
 # 00.00.012:
 # job-file implementiert
 #
@@ -77,37 +81,6 @@ from wlansecrets import SSID, PW
 import urequests   # aus UIFlow abgeguckt
 import json
 
-
-
-##########################################
-# Daten für selbst Update
-##########################################
-OTA_REPO = 'kapest007/My-Micropython-OTA-Updater'
-OTA_FILE_NAME = 'ota.py'
-OTA_ZIEL_NAME = 'boot.py'
-# File ota_version.py für Versionskontrolle erforderlich
-
-##########################################
-# Wichtige Daten in Variablen packen
-##########################################
-github_repo = 'kapest007/HOME_Markiese'
-update_file_name = 'Home_Markiese.py'
-ziel_name = 'main.py'
-
-
-def ota_update_setting():
-    global github_repo, update_file_name, ziel_name
-    
-    github_repo = OTA_REPO
-    update_file_name = OTA_FILE_NAME
-    ziel_name = OTA_ZIEL_NAME
-    
-def main_update_setting():
-    global github_repo, update_file_name, ziel_name
-    
-    github_repo = 'kapest007/HOME_Markiese'
-    update_file_name = 'Home_Markiese.py'
-    ziel_name = 'main.py'
 
 ##########################################
 # Wlan einrichten und verbinden:
