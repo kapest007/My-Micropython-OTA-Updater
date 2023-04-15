@@ -13,11 +13,14 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.004'
+version = '00.00.005'
 date = '12.04.2023'
 author = 'Peter Stöck'
 
 # Versionen:
+# 00.00.005:
+# Das neue File wird jetzt herunter geladen und in main.py gespeichert.
+#
 # 00.00.004:
 # Die Versionsnummer der vorhandenen Version wird geholt.
 #
@@ -93,3 +96,22 @@ try:
     print(current_version)
 except:
     print('Aktuelle Versionsnummer wurde nicht gefunden!')
+    
+    
+if github_version > current_version:
+    url = 'https://api.github.com/repos/kapest007/HOME_Markiese/contents'
+    y = urequests.request(method='GET', url=url, headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
+    y_json = json.loads(y.text)
+    for x in y_json:
+        if x['name'] == 'Home_Markiese.py':
+            file_url = x['download_url']
+            
+            print(file_url)
+            
+    neues_file = y = urequests.request(method='GET', url=file_url, headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
+    print(neues_file.text)
+    
+    f = open('main.py', 'w')
+    f.write(neues_file.text)
+    f.close()
+    
