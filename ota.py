@@ -13,11 +13,23 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.006'
+version = '00.00.007'
 date = '15.04.2023'
 author = 'Peter Stöck'
 
+# TODO:
+# Programmstruktur überarbeiten
+# RTC stellen.
+# log einführen - für remote Fehlermeldungen
+# Abbruchbedingung für Wlan Anmeldung
+# Versionsnummer aktualisieren.
+# Selbst update
+# Liste mit Updates bearbeiten.
+
 # Versionen:
+# 00.00.007:
+# Settings zum bearbeiten von OTA und MAIN eingeführt.
+#
 # 00.00.006:
 # Wichtige Daten in Variablen gepackt.
 #
@@ -53,13 +65,36 @@ import urequests   # aus UIFlow abgeguckt
 import json
 
 
+
+##########################################
+# Daten für selbst Update
+##########################################
+OTA_REPO = 'kapest007/My-Micropython-OTA-Updater'
+OTA_FILE_NAME = 'ota.py'
+OTA_ZIEL_NAME = 'boot.py'
+# File ota_version.py
+
 ##########################################
 # Wichtige Daten in Variablen packen
 ##########################################
-
 github_repo = 'kapest007/HOME_Markiese'
 update_file_name = 'Home_Markiese.py'
 ziel_name = 'main.py'
+
+
+def ota_update_setting():
+    global github_repo, update_file_name, ziel_name
+    
+    github_repo = OTA_REPO
+    update_file_name = OTA_FILE_NAME
+    ziel_name = OTA_ZIEL_NAME
+    
+def main_update_setting():
+    global github_repo, update_file_name, ziel_name
+    
+    github_repo = 'kapest007/HOME_Markiese'
+    update_file_name = 'Home_Markiese.py'
+    ziel_name = 'main.py'
 
 ##########################################
 # Wlan einrichten und verbinden:
@@ -90,7 +125,11 @@ try:
     github_version = gh_json['tag_name']
     print(github_version)
 except:
-    print('Latest Version konnte nicht geholt werden!')
+    print('Latest Versionsnummer konnte nicht geholt werden!')
+    
+# Als Funktion:
+def github_version_holen():
+    pass
 
 
 
