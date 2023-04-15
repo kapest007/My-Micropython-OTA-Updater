@@ -13,7 +13,7 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.008'
+version = '00.00.009'
 date = '15.04.2023'
 author = 'Peter Stöck'
 
@@ -27,6 +27,9 @@ author = 'Peter Stöck'
 # Liste mit Updates bearbeiten.
 
 # Versionen:
+# 00.00.009:
+# Lokale Versionsnummer holen als Funktion mit globalen Variablen implementiert.
+#
 # 00.00.008:
 # Versionsnummer von Github holen als Funktion mit globalen Variablen implementiert.
 #
@@ -148,15 +151,30 @@ github_version_holen()
 # Aktuelle Version aus current_version.py holen:
 ##################################################
 
-try:
-    f = open('current_version.py','r')
-    current_version = f.read()
-    f.close()
-    current_version = current_version.replace("\r\n", "")
-    print(current_version)
-except:
-    print('Aktuelle Versionsnummer wurde nicht gefunden!')
-    
+# try:
+#     f = open('current_version.py','r')
+#     current_version = f.read()
+#     f.close()
+#     current_version = current_version.replace("\r\n", "")
+#     print(current_version)
+# except:
+#     print('Aktuelle Versionsnummer wurde nicht gefunden!')
+
+def lokale_version_holen():
+    global github_repo, update_file_name, ziel_name, current_version
+    try:
+        f = open('current_version.py','r')
+        current_version = f.read()
+        f.close()
+        current_version = current_version.replace("\r\n", "")
+        print(current_version)
+    except:
+        print('Aktuelle Versionsnummer wurde nicht gefunden!')
+
+lokale_version_holen()
+
+
+
     
 if github_version > current_version:
     url = 'https://api.github.com/repos/' + github_repo + '/contents'
