@@ -13,7 +13,7 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.011'
+version = '00.00.012'
 date = '15.04.2023'
 author = 'Peter Stöck'
 
@@ -23,10 +23,12 @@ author = 'Peter Stöck'
 # log einführen - für remote Fehlermeldungen
 # Abbruchbedingung für Wlan Anmeldung
 # Versionsnummer aktualisieren.
-# Selbst update
 # Liste mit Updates bearbeiten.
 
 # Versionen:
+# 00.00.012:
+# job-file implementiert
+#
 # 00.00.011:
 # Code aufgräumt
 #
@@ -180,10 +182,23 @@ def neue_version_holen():
 # Hauptschleife
 ###################################################
 
-main_update_setting()
+#############################
+# job.json laden
+#############################
 
-github_version_holen()
-lokale_version_holen()
-neue_version_holen()
+try:
+    f = open('job.json', 'r')
+    jobs = json.loads(f.read())
+    f.close()
+except:
+    print('Job-File nicht gefunden')
+    
+for job in jobs:    
+    github_repo = job['repo']
+    update_file_name = job['file']
+    ziel_name = job['ziel']
+    github_version_holen()
+    lokale_version_holen()
+    neue_version_holen()
 
 
