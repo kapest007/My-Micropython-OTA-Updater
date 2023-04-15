@@ -13,7 +13,7 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.007'
+version = '00.00.008'
 date = '15.04.2023'
 author = 'Peter Stöck'
 
@@ -27,6 +27,9 @@ author = 'Peter Stöck'
 # Liste mit Updates bearbeiten.
 
 # Versionen:
+# 00.00.008:
+# Versionsnummer von Github holen als Funktion mit globalen Variablen implementiert.
+#
 # 00.00.007:
 # Settings zum bearbeiten von OTA und MAIN eingeführt.
 #
@@ -117,21 +120,28 @@ else:
 # hier von kapest007/HOME_Markiese
 ##########################################
 
-# Der Weg aus UIFlow:
-# So funktioniert es: user-agent ist erforderlich!
-try:
-    req = urequests.request(method='GET', url='https://api.github.com/repos/' + github_repo + '/releases/latest', headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
-    gh_json = json.loads((req.text))  # Die Daten liegen als JSON vor.
-    github_version = gh_json['tag_name']
-    print(github_version)
-except:
-    print('Latest Versionsnummer konnte nicht geholt werden!')
+# # Der Weg aus UIFlow:
+# # So funktioniert es: user-agent ist erforderlich!
+# try:
+#     req = urequests.request(method='GET', url='https://api.github.com/repos/' + github_repo + '/releases/latest', headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
+#     gh_json = json.loads((req.text))  # Die Daten liegen als JSON vor.
+#     github_version = gh_json['tag_name']
+#     print(github_version)
+# except:
+#     print('Latest Versionsnummer konnte nicht geholt werden!')
     
 # Als Funktion:
 def github_version_holen():
-    pass
+    global github_repo, update_file_name, ziel_name, github_version    
+    try:
+        req = urequests.request(method='GET', url='https://api.github.com/repos/' + github_repo + '/releases/latest', headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
+        gh_json = json.loads((req.text))  # Die Daten liegen als JSON vor.
+        github_version = gh_json['tag_name']
+        print(github_version)
+    except:
+        print('Latest Versionsnummer konnte nicht geholt werden!')
 
-
+github_version_holen()
 
 
 ##################################################
