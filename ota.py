@@ -13,7 +13,7 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.010'
+version = '00.00.011'
 date = '15.04.2023'
 author = 'Peter Stöck'
 
@@ -27,6 +27,9 @@ author = 'Peter Stöck'
 # Liste mit Updates bearbeiten.
 
 # Versionen:
+# 00.00.011:
+# Code aufgräumt
+#
 # 00.00.010:
 # Neue Version holen als Funktion mit globalen Variablen implementiert.
 #
@@ -69,7 +72,6 @@ import time
 import network
 from wlansecrets import SSID, PW
 # import os, gc                      
-# from httpclient import HttpClient   # ImportError: can't import name HttpClient 
 import urequests   # aus UIFlow abgeguckt
 import json
 
@@ -81,7 +83,7 @@ import json
 OTA_REPO = 'kapest007/My-Micropython-OTA-Updater'
 OTA_FILE_NAME = 'ota.py'
 OTA_ZIEL_NAME = 'boot.py'
-# File ota_version.py
+# File ota_version.py für Versionskontrolle erforderlich
 
 ##########################################
 # Wichtige Daten in Variablen packen
@@ -136,9 +138,6 @@ def github_version_holen():
     except:
         print('Latest Versionsnummer konnte nicht geholt werden!')
 
-github_version_holen()
-
-
 ##################################################
 # Aktuelle Version aus current_version.py holen:
 ##################################################
@@ -154,28 +153,10 @@ def lokale_version_holen():
     except:
         print('Aktuelle Versionsnummer wurde nicht gefunden!')
 
-lokale_version_holen()
+##################################################
+# Wenn vorhanden neue Version holen:
+##################################################
 
-
-
-    
-# if github_version > current_version:
-#     url = 'https://api.github.com/repos/' + github_repo + '/contents'
-#     y = urequests.request(method='GET', url=url, headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
-#     y_json = json.loads(y.text)
-#     for x in y_json:
-#         if x['name'] == update_file_name :
-#             file_url = x['download_url']
-#             
-#             print(file_url)
-#             
-#     neues_file = y = urequests.request(method='GET', url=file_url, headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
-#     print(neues_file.text)
-#     
-#     f = open(ziel_name, 'w')
-#     f.write(neues_file.text)
-#     f.close()
-    
 def neue_version_holen():
     global github_repo, update_file_name, ziel_name, github_version, current_version
     if github_version > current_version:
@@ -195,6 +176,14 @@ def neue_version_holen():
         f.write(neues_file.text)
         f.close()
 
+###################################################
+# Hauptschleife
+###################################################
+
+main_update_setting()
+
+github_version_holen()
+lokale_version_holen()
 neue_version_holen()
 
 
