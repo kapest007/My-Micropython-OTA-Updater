@@ -13,7 +13,7 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.009'
+version = '00.00.010'
 date = '15.04.2023'
 author = 'Peter Stöck'
 
@@ -27,6 +27,9 @@ author = 'Peter Stöck'
 # Liste mit Updates bearbeiten.
 
 # Versionen:
+# 00.00.010:
+# Neue Version holen als Funktion mit globalen Variablen implementiert.
+#
 # 00.00.009:
 # Lokale Versionsnummer holen als Funktion mit globalen Variablen implementiert.
 #
@@ -123,17 +126,6 @@ else:
 # hier von kapest007/HOME_Markiese
 ##########################################
 
-# # Der Weg aus UIFlow:
-# # So funktioniert es: user-agent ist erforderlich!
-# try:
-#     req = urequests.request(method='GET', url='https://api.github.com/repos/' + github_repo + '/releases/latest', headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
-#     gh_json = json.loads((req.text))  # Die Daten liegen als JSON vor.
-#     github_version = gh_json['tag_name']
-#     print(github_version)
-# except:
-#     print('Latest Versionsnummer konnte nicht geholt werden!')
-    
-# Als Funktion:
 def github_version_holen():
     global github_repo, update_file_name, ziel_name, github_version    
     try:
@@ -151,15 +143,6 @@ github_version_holen()
 # Aktuelle Version aus current_version.py holen:
 ##################################################
 
-# try:
-#     f = open('current_version.py','r')
-#     current_version = f.read()
-#     f.close()
-#     current_version = current_version.replace("\r\n", "")
-#     print(current_version)
-# except:
-#     print('Aktuelle Versionsnummer wurde nicht gefunden!')
-
 def lokale_version_holen():
     global github_repo, update_file_name, ziel_name, current_version
     try:
@@ -176,20 +159,42 @@ lokale_version_holen()
 
 
     
-if github_version > current_version:
-    url = 'https://api.github.com/repos/' + github_repo + '/contents'
-    y = urequests.request(method='GET', url=url, headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
-    y_json = json.loads(y.text)
-    for x in y_json:
-        if x['name'] == update_file_name :
-            file_url = x['download_url']
-            
-            print(file_url)
-            
-    neues_file = y = urequests.request(method='GET', url=file_url, headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
-    print(neues_file.text)
+# if github_version > current_version:
+#     url = 'https://api.github.com/repos/' + github_repo + '/contents'
+#     y = urequests.request(method='GET', url=url, headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
+#     y_json = json.loads(y.text)
+#     for x in y_json:
+#         if x['name'] == update_file_name :
+#             file_url = x['download_url']
+#             
+#             print(file_url)
+#             
+#     neues_file = y = urequests.request(method='GET', url=file_url, headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
+#     print(neues_file.text)
+#     
+#     f = open(ziel_name, 'w')
+#     f.write(neues_file.text)
+#     f.close()
     
-    f = open(ziel_name, 'w')
-    f.write(neues_file.text)
-    f.close()
-    
+def neue_version_holen():
+    global github_repo, update_file_name, ziel_name, github_version, current_version
+    if github_version > current_version:
+        url = 'https://api.github.com/repos/' + github_repo + '/contents'
+        y = urequests.request(method='GET', url=url, headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
+        y_json = json.loads(y.text)
+        for x in y_json:
+            if x['name'] == update_file_name :
+                file_url = x['download_url']
+                
+                print(file_url)
+                
+        neues_file = y = urequests.request(method='GET', url=file_url, headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
+        print(neues_file.text)
+        
+        f = open(ziel_name, 'w')
+        f.write(neues_file.text)
+        f.close()
+
+neue_version_holen()
+
+
