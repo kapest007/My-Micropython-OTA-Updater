@@ -13,11 +13,14 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.005'
-date = '12.04.2023'
+version = '00.00.006'
+date = '15.04.2023'
 author = 'Peter Stöck'
 
 # Versionen:
+# 00.00.006:
+# Wichtige Daten in Variablen gepackt.
+#
 # 00.00.005:
 # Das neue File wird jetzt herunter geladen und in main.py gespeichert.
 #
@@ -51,6 +54,14 @@ import json
 
 
 ##########################################
+# Wichtige Daten in Variablen packen
+##########################################
+
+github_repo = 'kapest007/HOME_Markiese'
+update_file_name = 'Home_Markiese.py'
+ziel_name = 'main.py'
+
+##########################################
 # Wlan einrichten und verbinden:
 ##########################################
 
@@ -74,7 +85,7 @@ else:
 # Der Weg aus UIFlow:
 # So funktioniert es: user-agent ist erforderlich!
 try:
-    req = urequests.request(method='GET', url='https://api.github.com/repos/kapest007/HOME_Markiese/releases/latest', headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
+    req = urequests.request(method='GET', url='https://api.github.com/repos/' + github_repo + '/releases/latest', headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
     gh_json = json.loads((req.text))  # Die Daten liegen als JSON vor.
     github_version = gh_json['tag_name']
     print(github_version)
@@ -99,11 +110,11 @@ except:
     
     
 if github_version > current_version:
-    url = 'https://api.github.com/repos/kapest007/HOME_Markiese/contents'
+    url = 'https://api.github.com/repos/' + github_repo + '/contents'
     y = urequests.request(method='GET', url=url, headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
     y_json = json.loads(y.text)
     for x in y_json:
-        if x['name'] == 'Home_Markiese.py':
+        if x['name'] == update_file_name :
             file_url = x['download_url']
             
             print(file_url)
@@ -111,7 +122,7 @@ if github_version > current_version:
     neues_file = y = urequests.request(method='GET', url=file_url, headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
     print(neues_file.text)
     
-    f = open('main.py', 'w')
+    f = open(ziel_name, 'w')
     f.write(neues_file.text)
     f.close()
     
