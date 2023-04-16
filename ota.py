@@ -13,7 +13,7 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.023'
+version = '00.00.024'
 date = '16.04.2023'
 author = 'Peter Stöck'
 
@@ -26,6 +26,9 @@ author = 'Peter Stöck'
 
 
 # Versionen:
+# 00.00.024:
+# time_out für Wlan Anmeldung. 
+#
 # 00.00.023:
 # Zeitzone wurde korrigiert.
 #
@@ -131,9 +134,12 @@ wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 
 wlan.connect(SSID, PW)
-
+time_out = 10
 while not wlan.isconnected():
     time.sleep(1)
+    time_out -= 1
+    if time_out = 0:
+        break
 else:
     lcd.setRotation(3)
     print(wlan.ifconfig()[0])
