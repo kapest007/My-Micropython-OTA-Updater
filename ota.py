@@ -13,7 +13,7 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.016'
+version = '00.00.017'
 date = '16.04.2023'
 author = 'Peter Stöck'
 
@@ -28,6 +28,9 @@ author = 'Peter Stöck'
 
 
 # Versionen:
+# 00.00.017:
+# versionsliste wird geführt!
+#
 # 00.00.016:
 # Die Parameterübergabe bei den Funktionen wurde überarbeitet.
 # Globale Variablen wurden elemeniert.
@@ -164,7 +167,7 @@ def neue_software_holen(gh_version, loc_version, repo, file_name, ziel_name):
                 print(file_url)
                 
         neues_file = urequests.request(method='GET', url=file_url, headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
-        print(neues_file.text)
+#        print(neues_file.text)
         
         f = open(ziel_name, 'w')
         f.write(neues_file.text)
@@ -186,6 +189,17 @@ except:
     print('Job-File nicht gefunden')
     # Hier fehlt noch eine Reaktion !!
 
+############################
+# Versionsliste holen
+############################
+
+try:
+    f = open('current_versions.json', 'r')
+    versionsliste = json.loads(f.read())
+    f.close()
+except:
+    print('versionsliste konnte nicht geladen werden!')
+
 ###########################
 # Job Loop
 ###########################
@@ -197,5 +211,13 @@ for job in jobs:
         lokale_version = lokale_version_holen(job['file'])
         if lokale_version != FEHLER:
             neue_software_holen(github_version, lokale_version, job['repo'], job['file'], job['ziel'])
+    versionsliste[job['file']] = github_version
 
-
+try:
+    f = open('current_versions.json', 'w')
+    f.write(json.dumps(versionsliste))
+    f.close()
+except:
+    print('versionsliste konnte nicht gespeichert werden!')
+   
+print(versionsliste)
