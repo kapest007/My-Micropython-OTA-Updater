@@ -13,7 +13,7 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.019'
+version = '00.00.020'
 date = '16.04.2023'
 author = 'Peter Stöck'
 
@@ -27,6 +27,10 @@ author = 'Peter Stöck'
 
 
 # Versionen:
+# 00.00.020:
+# Bei erfolgreichen Operationen und Fehlern
+# werden logeinträge geschrieben.
+
 # 00.00.019:
 # Log Eintragungen funktionieren.
 #
@@ -130,22 +134,21 @@ else:
 ##########################################
 
 ntp = ntptime.client(host='de.pool.ntp.org', timezone=1)
-zeitstempel = ntp.formatDatetime('-', ':')
+# zeitstempel = ntp.formatDatetime('-', ':')
 
-print(zeitstempel)
+# print(zeitstempel)
 
 
 def write_log(text):
     try:
         f = open('log.txt', 'a')
-#         f.write(zeitstempel + ' - ' + text)
         f.write(ntp.formatDatetime('-', ':') + ' - ' + text + '\n')
         f.close()
     except:
         print('kein Eintrag in logdatei möglich!')
     
 
-write_log('Dritter Eintrag zum Testen mit Zeilenwechsel am Ende.')   
+  
 
 ##########################################
 # Neueste Version bei Github abfragen:
@@ -206,6 +209,7 @@ def neue_software_holen(gh_version, loc_version, repo, file_name, ziel_name):
 # Hauptschleife
 ###################################################
 
+write_log('Update wird begonnen.') 
 #############################
 # job.json laden
 #############################
@@ -214,9 +218,11 @@ try:
     f = open('job.json', 'r')
     jobs = json.loads(f.read())
     f.close()
+    write_log('job.json wurde geladen.')
 except:
+    write_log('job.json konnte nicht geladen werden.')
+# Update abbrechen
     print('Job-File nicht gefunden')
-    # Hier fehlt noch eine Reaktion !!
 
 ############################
 # Versionsliste holen
@@ -226,7 +232,9 @@ try:
     f = open('current_versions.json', 'r')
     versionsliste = json.loads(f.read())
     f.close()
+    write_log('current_versions.json wurde geladen.')
 except:
+    write_log('versionsliste konnte nicht geladen werden!')
     print('versionsliste konnte nicht geladen werden!')
 
 ###########################
@@ -241,14 +249,17 @@ for job in jobs:
         if lokale_version != FEHLER:
             neue_software_holen(github_version, lokale_version, job['repo'], job['file'], job['ziel'])
     versionsliste[job['file']] = github_version
+    write_log(job['file'] + ' alt: ' + lokale_version + ' -> neu: ' + github_version)
 
 try:
     f = open('current_versions.json', 'w')
     f.write(json.dumps(versionsliste))
     f.close()
+    write_log('aktualisierte current_versions.json wurde gespeichert.')
 except:
-    print('versionsliste konnte nicht gespeichert werden!')
+    write_log('current_versions.json konnte nicht gespeichert werden!')
+    print('current_versions.json konnte nicht gespeichert werden!')
    
-print(versionsliste)
+# print(versionsliste)
 
 write_log('Updateprozess beendet.')
