@@ -27,7 +27,8 @@ author = 'Peter Stöck'
 
 # Versionen:
 # 00.00.024:
-# time_out für Wlan Anmeldung. 
+# time_out für Wlan Anmeldung.
+# Wlan Anmeldung wurde hinter die Funktionsdefinitionen verschoben.
 #
 # 00.00.023:
 # Zeitzone wurde korrigiert.
@@ -124,39 +125,11 @@ import urequests   # aus UIFlow abgeguckt
 import json
 import ntptime
 
+lcd.setRotation(3)
+
 FEHLER = '-1'
 
-##########################################
-# Wlan einrichten und verbinden:
-##########################################
 
-wlan = network.WLAN(network.STA_IF)
-wlan.active(True)
-
-wlan.connect(SSID, PW)
-time_out = 10
-while not wlan.isconnected():
-    time.sleep(1)
-    time_out -= 1
-    if time_out = 0:
-        break
-else:
-    lcd.setRotation(3)
-    print(wlan.ifconfig()[0])
-    
-##########################################
-# Mit NTP verbinden, um Zeitstempel
-# für log-Eintragungen holen zu können.
-##########################################
-
-ntp = ntptime.client(host='de.pool.ntp.org', timezone=2)
-# Es wird GMT angezeigt!!!
-
-##########################################
-# RTC starten
-##########################################
-
-# wird später implementiert.
 
 ###########################################
 # Funktion zum erzeugen von Log-Einträgen.
@@ -222,6 +195,41 @@ def software_holen(repo, file_name, ziel_name):
     f = open(ziel_name, 'w')
     f.write(neues_file.text)
     f.close()
+
+
+##########################################
+# Wlan einrichten und verbinden:
+##########################################
+
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
+
+wlan.connect(SSID, PW)
+time_out = 10
+while not wlan.isconnected():
+    time.sleep(1)
+    time_out -= 1
+    if time_out == 0:
+        write_log('Wlan nicht gefunden.')
+        break
+    # Hier muss das ganze Programm abgebrochen werden
+    # und ein entsprechender Log-Eintrag erstellt werden.
+
+print(wlan.ifconfig()[0])
+    
+##########################################
+# Mit NTP verbinden, um Zeitstempel
+# für log-Eintragungen holen zu können.
+##########################################
+
+ntp = ntptime.client(host='de.pool.ntp.org', timezone=2)
+# Es wird GMT angezeigt!!!
+
+##########################################
+# RTC starten
+##########################################
+
+# wird später implementiert.
 
 ###################################################
 # Hauptschleife
