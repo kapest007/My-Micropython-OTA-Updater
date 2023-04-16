@@ -13,7 +13,7 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.013'
+version = '00.00.014'
 date = '15.04.2023'
 author = 'Peter Stöck'
 
@@ -24,9 +24,13 @@ author = 'Peter Stöck'
 # log einführen - für remote Fehlermeldungen
 # Abbruchbedingung für Wlan Anmeldung
 # Aufräumen. OTA-Objekte entfernen.
+# Verzeichnis Wechsel bei MP und Github.
 
 
 # Versionen:
+# 00.00.014:
+# neue_version_holen in neue_software_holen umbenannt.
+
 # 00.00.013:
 # Überflüssigen Code entfernt
 #
@@ -132,7 +136,7 @@ def lokale_version_holen():
 # Wenn vorhanden neue Version holen:
 ##################################################
 
-def neue_version_holen():
+def neue_software_holen():
     global github_repo, update_file_name, ziel_name, github_version, current_version
     if github_version > current_version:
         url = 'https://api.github.com/repos/' + github_repo + '/contents'
@@ -172,6 +176,6 @@ for job in jobs:
     ziel_name = job['ziel']
     github_version_holen()
     lokale_version_holen()
-    neue_version_holen()
+    neue_software_holen()
 
 
