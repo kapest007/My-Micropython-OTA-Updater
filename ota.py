@@ -13,7 +13,7 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.022'
+version = '00.00.023'
 date = '16.04.2023'
 author = 'Peter Stöck'
 
@@ -27,6 +27,9 @@ author = 'Peter Stöck'
 
 
 # Versionen:
+# 00.00.023:
+# Zeitzone wurde korrigiert.
+#
 # 00.00.022:
 # Log-Einträge wurden überarbeitet.
 #
@@ -141,7 +144,8 @@ else:
 # für log-Eintragungen holen zu können.
 ##########################################
 
-ntp = ntptime.client(host='de.pool.ntp.org', timezone=1)
+ntp = ntptime.client(host='de.pool.ntp.org', timezone=2)
+# Es wird GMT angezeigt!!!
 
 ##########################################
 # RTC starten
