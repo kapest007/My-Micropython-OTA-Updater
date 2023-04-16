@@ -13,7 +13,7 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.018'
+version = '00.00.019'
 date = '16.04.2023'
 author = 'Peter Stöck'
 
@@ -27,6 +27,9 @@ author = 'Peter Stöck'
 
 
 # Versionen:
+# 00.00.019:
+# Log Eintragungen funktionieren.
+#
 # 00.00.018:
 # NTP zeitstempel implementieren für LOG
 # log.txt hinzugefügt.
@@ -130,7 +133,19 @@ ntp = ntptime.client(host='de.pool.ntp.org', timezone=1)
 zeitstempel = ntp.formatDatetime('-', ':')
 
 print(zeitstempel)
+
+
+def write_log(text):
+    try:
+        f = open('log.txt', 'a')
+#         f.write(zeitstempel + ' - ' + text)
+        f.write(ntp.formatDatetime('-', ':') + ' - ' + text + '\n')
+        f.close()
+    except:
+        print('kein Eintrag in logdatei möglich!')
     
+
+write_log('Dritter Eintrag zum Testen mit Zeilenwechsel am Ende.')   
 
 ##########################################
 # Neueste Version bei Github abfragen:
@@ -235,3 +250,5 @@ except:
     print('versionsliste konnte nicht gespeichert werden!')
    
 print(versionsliste)
+
+write_log('Updateprozess beendet.')
