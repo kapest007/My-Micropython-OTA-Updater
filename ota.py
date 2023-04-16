@@ -13,7 +13,7 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.020'
+version = '00.00.022'
 date = '16.04.2023'
 author = 'Peter Stöck'
 
@@ -27,10 +27,18 @@ author = 'Peter Stöck'
 
 
 # Versionen:
+# 00.00.022:
+# Log-Einträge wurden überarbeitet.
+#
+# 00.00.021:
+# Der Versionsvergleich wird aus neue_software_holen() entfernt
+# und im Hauptprogramm durchgeführt. So lassen sich die
+# Log-Einträger besser erzeugen.
+#
 # 00.00.020:
 # Bei erfolgreichen Operationen und Fehlern
 # werden logeinträge geschrieben.
-
+#
 # 00.00.019:
 # Log Eintragungen funktionieren.
 #
@@ -129,15 +137,21 @@ else:
     print(wlan.ifconfig()[0])
     
 ##########################################
-# aktuelle Zeit mit NTP holen.
-# zeitstempel für log-Eintragungen
+# Mit NTP verbinden, um Zeitstempel
+# für log-Eintragungen holen zu können.
 ##########################################
 
 ntp = ntptime.client(host='de.pool.ntp.org', timezone=1)
-# zeitstempel = ntp.formatDatetime('-', ':')
 
-# print(zeitstempel)
+##########################################
+# RTC starten
+##########################################
 
+# wird später implementiert.
+
+###########################################
+# Funktion zum erzeugen von Log-Einträgen.
+###########################################
 
 def write_log(text):
     try:
@@ -151,8 +165,7 @@ def write_log(text):
   
 
 ##########################################
-# Neueste Version bei Github abfragen:
-# hier von kapest007/HOME_Markiese
+# Neueste Version bei Github abfragen.
 ##########################################
 
 def github_version_holen(repo): 
@@ -163,6 +176,7 @@ def github_version_holen(repo):
         print(github_version)
         return github_version
     except:
+        write_log('Latest Versionsnummer für ' + job['file'] + ' konnte nicht geholt werden!')
         print('Latest Versionsnummer konnte nicht geholt werden!')
         return FEHLER
 
@@ -180,36 +194,32 @@ def lokale_version_holen(file_name):
         print(current_version)
         return current_version
     except:
+        write_log('Lokale Versionsnummer für ' + job['file'] + ' konnte nicht geholt werden!')
         print('Aktuelle Versionsnummer wurde nicht gefunden!')
         return FEHLER
 
 ##################################################
-# Wenn vorhanden neue Version holen:
+# Neue Software holen:
 ##################################################
 
-def neue_software_holen(gh_version, loc_version, repo, file_name, ziel_name):
-    if gh_version > loc_version:
-        url = 'https://api.github.com/repos/' + repo + '/contents'
-        y = urequests.request(method='GET', url=url, headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
-        y_json = json.loads(y.text)
-        for x in y_json:
-            if x['name'] == file_name :
-                file_url = x['download_url']
-                
-                print(file_url)
-                
-        neues_file = urequests.request(method='GET', url=file_url, headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
-#        print(neues_file.text)
-        
-        f = open(ziel_name, 'w')
-        f.write(neues_file.text)
-        f.close()
+def software_holen(repo, file_name, ziel_name):
+    url = 'https://api.github.com/repos/' + repo + '/contents'
+    y = urequests.request(method='GET', url=url, headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
+    y_json = json.loads(y.text)
+    for x in y_json:
+        if x['name'] == file_name :
+            file_url = x['download_url']            
+    neues_file = urequests.request(method='GET', url=file_url, headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})    
+    f = open(ziel_name, 'w')
+    f.write(neues_file.text)
+    f.close()
 
 ###################################################
 # Hauptschleife
 ###################################################
 
-write_log('Update wird begonnen.') 
+write_log('Update wird begonnen.')
+
 #############################
 # job.json laden
 #############################
@@ -218,7 +228,7 @@ try:
     f = open('job.json', 'r')
     jobs = json.loads(f.read())
     f.close()
-    write_log('job.json wurde geladen.')
+#     write_log('job.json wurde geladen.')
 except:
     write_log('job.json konnte nicht geladen werden.')
 # Update abbrechen
@@ -232,13 +242,13 @@ try:
     f = open('current_versions.json', 'r')
     versionsliste = json.loads(f.read())
     f.close()
-    write_log('current_versions.json wurde geladen.')
+#     write_log('current_versions.json wurde geladen.')
 except:
-    write_log('versionsliste konnte nicht geladen werden!')
+    write_log('current_versions.json konnte nicht geladen werden!')
     print('versionsliste konnte nicht geladen werden!')
 
 ###########################
-# Job Loop
+# Job Loop abarbeiten.
 ###########################
 
 for job in jobs:    
@@ -247,19 +257,25 @@ for job in jobs:
     if github_version != FEHLER:
         lokale_version = lokale_version_holen(job['file'])
         if lokale_version != FEHLER:
-            neue_software_holen(github_version, lokale_version, job['repo'], job['file'], job['ziel'])
-    versionsliste[job['file']] = github_version
-    write_log(job['file'] + ' alt: ' + lokale_version + ' -> neu: ' + github_version)
+            if github_version > lokale_version:
+                software_holen(job['repo'], job['file'], job['ziel'])
+                versionsliste[job['file']] = github_version
+                write_log(job['file'] + ' wurde von ' + lokale_version + ' auf ' + github_version + ' aktualisiert.')
+            else:
+                write_log(job['file'] + ' ist noch aktuell.')
 
 try:
     f = open('current_versions.json', 'w')
     f.write(json.dumps(versionsliste))
     f.close()
-    write_log('aktualisierte current_versions.json wurde gespeichert.')
+#     write_log('aktualisierte current_versions.json wurde gespeichert.')
 except:
     write_log('current_versions.json konnte nicht gespeichert werden!')
     print('current_versions.json konnte nicht gespeichert werden!')
    
-# print(versionsliste)
 
 write_log('Updateprozess beendet.')
+
+# Aufräumen
+
+
