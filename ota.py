@@ -13,21 +13,24 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.017'
+version = '00.00.018'
 date = '16.04.2023'
 author = 'Peter Stöck'
 
 # TODO:
-# Versionsnummer aktualisieren.
+# Abbruchbedingung für Wlan Anmeldung
 # RTC stellen.
 # log einführen - für remote Fehlermeldungen
-# Abbruchbedingung für Wlan Anmeldung
 # Aufräumen. OTA-Objekte entfernen.
-# Verzeichnis Wechsel bei MP und Github.
-# Globale Variablen aus den Funktionen entfernen.
+# Für V2: Verzeichnis Wechsel bei MP und Github.
+
 
 
 # Versionen:
+# 00.00.018:
+# NTP zeitstempel implementieren für LOG
+# log.txt hinzugefügt.
+#
 # 00.00.017:
 # versionsliste wird geführt!
 #
@@ -99,6 +102,7 @@ from wlansecrets import SSID, PW
 # import os, gc                      
 import urequests   # aus UIFlow abgeguckt
 import json
+import ntptime
 
 FEHLER = '-1'
 
@@ -116,6 +120,16 @@ while not wlan.isconnected():
 else:
     lcd.setRotation(3)
     print(wlan.ifconfig()[0])
+    
+##########################################
+# aktuelle Zeit mit NTP holen.
+# zeitstempel für log-Eintragungen
+##########################################
+
+ntp = ntptime.client(host='de.pool.ntp.org', timezone=1)
+zeitstempel = ntp.formatDatetime('-', ':')
+
+print(zeitstempel)
     
 
 ##########################################
