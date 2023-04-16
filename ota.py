@@ -13,24 +13,36 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.014'
-date = '15.04.2023'
+version = '00.00.016'
+date = '16.04.2023'
 author = 'Peter Stöck'
 
 # TODO:
-# Globale Variablen aus den Funktionen entfernen.
 # Versionsnummer aktualisieren.
 # RTC stellen.
 # log einführen - für remote Fehlermeldungen
 # Abbruchbedingung für Wlan Anmeldung
 # Aufräumen. OTA-Objekte entfernen.
 # Verzeichnis Wechsel bei MP und Github.
+# Globale Variablen aus den Funktionen entfernen.
 
 
 # Versionen:
+# 00.00.016:
+# Die Parameterübergabe bei den Funktionen wurde überarbeitet.
+# Globale Variablen wurden elemeniert.
+# Konstante FEHLER eingeführt.
+#
+# 00.00.015:
+# Die Versionen der Programme werden nun
+# In current_versions.json in einem
+# Diktionaty mit den aktuellen Versionsnummern
+# gespeichert:
+# Mit update_file_name aus jobs.json als Key.
+#
 # 00.00.014:
 # neue_version_holen in neue_software_holen umbenannt.
-
+#
 # 00.00.013:
 # Überflüssigen Code entfernt
 #
@@ -85,6 +97,7 @@ from wlansecrets import SSID, PW
 import urequests   # aus UIFlow abgeguckt
 import json
 
+FEHLER = '-1'
 
 ##########################################
 # Wlan einrichten und verbinden:
@@ -107,48 +120,50 @@ else:
 # hier von kapest007/HOME_Markiese
 ##########################################
 
-def github_version_holen():
-    global github_repo, update_file_name, ziel_name, github_version    
+def github_version_holen(repo): 
     try:
-        req = urequests.request(method='GET', url='https://api.github.com/repos/' + github_repo + '/releases/latest', headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
+        req = urequests.request(method='GET', url='https://api.github.com/repos/' + repo + '/releases/latest', headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
         gh_json = json.loads((req.text))  # Die Daten liegen als JSON vor.
         github_version = gh_json['tag_name']
         print(github_version)
+        return github_version
     except:
         print('Latest Versionsnummer konnte nicht geholt werden!')
+        return FEHLER
 
 ##################################################
 # Aktuelle Version aus current_version.py holen:
 ##################################################
 
-def lokale_version_holen():
-    global github_repo, update_file_name, ziel_name, current_version
+def lokale_version_holen(file_name):
     try:
-        f = open('current_version.py','r')
-        current_version = f.read()
+        f = open('current_versions.json','r')
+        current_versions = f.read()
         f.close()
-        current_version = current_version.replace("\r\n", "")
+        current_versions = json.loads(current_versions)
+        current_version = current_versions[file_name]
         print(current_version)
+        return current_version
     except:
         print('Aktuelle Versionsnummer wurde nicht gefunden!')
+        return FEHLER
 
 ##################################################
 # Wenn vorhanden neue Version holen:
 ##################################################
 
-def neue_software_holen():
-    global github_repo, update_file_name, ziel_name, github_version, current_version
-    if github_version > current_version:
-        url = 'https://api.github.com/repos/' + github_repo + '/contents'
+def neue_software_holen(gh_version, loc_version, repo, file_name, ziel_name):
+    if gh_version > loc_version:
+        url = 'https://api.github.com/repos/' + repo + '/contents'
         y = urequests.request(method='GET', url=url, headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
         y_json = json.loads(y.text)
         for x in y_json:
-            if x['name'] == update_file_name :
+            if x['name'] == file_name :
                 file_url = x['download_url']
                 
                 print(file_url)
                 
-        neues_file = y = urequests.request(method='GET', url=file_url, headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
+        neues_file = urequests.request(method='GET', url=file_url, headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
         print(neues_file.text)
         
         f = open(ziel_name, 'w')
@@ -169,13 +184,18 @@ try:
     f.close()
 except:
     print('Job-File nicht gefunden')
-    
+    # Hier fehlt noch eine Reaktion !!
+
+###########################
+# Job Loop
+###########################
+
 for job in jobs:    
-    github_repo = job['repo']
-    update_file_name = job['file']
-    ziel_name = job['ziel']
-    github_version_holen()
-    lokale_version_holen()
-    neue_software_holen()
+    
+    github_version = github_version_holen(job['repo'])
+    if github_version != FEHLER:
+        lokale_version = lokale_version_holen(job['file'])
+        if lokale_version != FEHLER:
+            neue_software_holen(github_version, lokale_version, job['repo'], job['file'], job['ziel'])
 
 
