@@ -13,8 +13,8 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.024'
-date = '16.04.2023'
+version = '00.00.025'
+date = '17.04.2023'
 author = 'Peter Stöck'
 
 # TODO:
@@ -26,6 +26,12 @@ author = 'Peter Stöck'
 
 
 # Versionen:
+# 00.00.025:
+# write_log() wurde um mode ergänzt.
+# mode = 0 ermöglicht es ohne Timestamp
+# einen Log-Eintrag zu erzeugen, wenn
+# kein Wlan besteht.
+#
 # 00.00.024:
 # time_out für Wlan Anmeldung.
 # Wlan Anmeldung wurde hinter die Funktionsdefinitionen verschoben.
@@ -133,12 +139,17 @@ FEHLER = '-1'
 
 ###########################################
 # Funktion zum erzeugen von Log-Einträgen.
+# mode = 0 ohne Timestamp
+# mode = 1 mit Timestamp
 ###########################################
 
-def write_log(text):
+def write_log(mode, text):
     try:
         f = open('log.txt', 'a')
-        f.write(ntp.formatDatetime('-', ':') + ' - ' + text + '\n')
+        if mode:
+            f.write(ntp.formatDatetime('-', ':') + ' - ' + text + '\n')
+        else:
+            f.write(text + '\n')
         f.close()
     except:
         print('kein Eintrag in logdatei möglich!')
@@ -158,7 +169,7 @@ def github_version_holen(repo):
         print(github_version)
         return github_version
     except:
-        write_log('Latest Versionsnummer für ' + job['file'] + ' konnte nicht geholt werden!')
+        write_log(1, 'Latest Versionsnummer für ' + job['file'] + ' konnte nicht geholt werden!')
         print('Latest Versionsnummer konnte nicht geholt werden!')
         return FEHLER
 
@@ -176,7 +187,7 @@ def lokale_version_holen(file_name):
         print(current_version)
         return current_version
     except:
-        write_log('Lokale Versionsnummer für ' + job['file'] + ' konnte nicht geholt werden!')
+        write_log(1, 'Lokale Versionsnummer für ' + job['file'] + ' konnte nicht geholt werden!')
         print('Aktuelle Versionsnummer wurde nicht gefunden!')
         return FEHLER
 
@@ -210,7 +221,7 @@ while not wlan.isconnected():
     time.sleep(1)
     time_out -= 1
     if time_out == 0:
-        write_log('Wlan nicht gefunden.')
+        write_log(0, 'Wlan nicht gefunden.')
         break
     # Hier muss das ganze Programm abgebrochen werden
     # und ein entsprechender Log-Eintrag erstellt werden.
@@ -235,7 +246,7 @@ ntp = ntptime.client(host='de.pool.ntp.org', timezone=2)
 # Hauptschleife
 ###################################################
 
-write_log('Update wird begonnen.')
+write_log(1, 'Update wird begonnen.')
 
 #############################
 # job.json laden
@@ -247,7 +258,7 @@ try:
     f.close()
 #     write_log('job.json wurde geladen.')
 except:
-    write_log('job.json konnte nicht geladen werden.')
+    write_log(1, 'job.json konnte nicht geladen werden.')
 # Update abbrechen
     print('Job-File nicht gefunden')
 
@@ -261,7 +272,7 @@ try:
     f.close()
 #     write_log('current_versions.json wurde geladen.')
 except:
-    write_log('current_versions.json konnte nicht geladen werden!')
+    write_log(1, 'current_versions.json konnte nicht geladen werden!')
     print('versionsliste konnte nicht geladen werden!')
 
 ###########################
@@ -279,7 +290,7 @@ for job in jobs:
                 versionsliste[job['file']] = github_version
                 write_log(job['file'] + ' wurde von ' + lokale_version + ' auf ' + github_version + ' aktualisiert.')
             else:
-                write_log(job['file'] + ' ist noch aktuell.')
+                write_log(1, job['file'] + ' ist noch aktuell.')
 
 try:
     f = open('current_versions.json', 'w')
@@ -287,11 +298,11 @@ try:
     f.close()
 #     write_log('aktualisierte current_versions.json wurde gespeichert.')
 except:
-    write_log('current_versions.json konnte nicht gespeichert werden!')
+    write_log(1, 'current_versions.json konnte nicht gespeichert werden!')
     print('current_versions.json konnte nicht gespeichert werden!')
    
 
-write_log('Updateprozess beendet.')
+write_log(1, 'Updateprozess beendet.')
 
 # Aufräumen
 
