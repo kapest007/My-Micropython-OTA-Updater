@@ -20,7 +20,6 @@ author = 'Peter Stöck'
 # TODO:
 # Abbruchbedingung für Wlan Anmeldung
 # RTC stellen.
-# log einführen - für remote Fehlermeldungen
 # Aufräumen. OTA-Objekte entfernen.
 # Für V2: Verzeichnis Wechsel bei MP und Github.
 
