@@ -18,10 +18,10 @@ date = '17.04.2023'
 author = 'Peter Stöck'
 
 # TODO:
+# Aufräumen. OTA-Objekte entfernen - beenden.
+# Für V2:
+# Verzeichnis Wechsel bei MP und Github.
 # RTC stellen.
-# Aufräumen. OTA-Objekte entfernen.
-# Für V2: Verzeichnis Wechsel bei MP und Github.
-
 
 
 # Versionen:
