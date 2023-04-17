@@ -13,8 +13,8 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.025'
-date = '17.04.2023'
+version = '00.00.030'
+date = '18.04.2023'
 author = 'Peter Stöck'
 
 # TODO:
@@ -26,6 +26,17 @@ author = 'Peter Stöck'
 
 
 # Versionen:
+# 00.00.030:
+# Kleiner Versionssprung. Der Versuch das Programm aus
+# verschiedenen Stellen bei essentiellen Fehlern mit sys.exit()
+# zu verlassen funktionierte. Aber das Aufräumen funktioniert nur
+# am Ende, weil alle Objekte die gelöscht werden sollen
+# bekannt sein müssen. Dann kann aber nicht schon früher die
+# Aufräufunktion ausgeführt werden.
+# Deshalb wurde wieder auf diese Version zurückgesetzt mit:
+# git reflog um die Nummer zu erhalten und
+# git revert ae563be um zurück zu springen.
+#
 # 00.00.025:
 # write_log() wurde um mode ergänzt.
 # mode = 0 ermöglicht es ohne Timestamp
