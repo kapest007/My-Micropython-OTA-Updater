@@ -13,11 +13,12 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.027'
+version = '00.00.025'
 date = '17.04.2023'
 author = 'Peter Stöck'
 
 # TODO:
+# Abbruchbedingung für Wlan Anmeldung
 # RTC stellen.
 # Aufräumen. OTA-Objekte entfernen.
 # Für V2: Verzeichnis Wechsel bei MP und Github.
@@ -25,13 +26,6 @@ author = 'Peter Stöck'
 
 
 # Versionen:
-# 00.00.027:
-# Aufräumen implementiert.
-#
-# 00.00.026:
-# sys.exit() zum Programmabruch bei relevanten Fehlern eingeführt.
-# Bei elementarem Fehler wird das Programm beendet.
-#
 # 00.00.025:
 # write_log() wurde um mode ergänzt.
 # mode = 0 ermöglicht es ohne Timestamp
@@ -128,16 +122,14 @@ author = 'Peter Stöck'
 from m5stack import *
 from m5ui import *
 from uiflow import *
-import gc
-print(gc.mem_free())
 import machine
 import time
 import network
-from wlansecrets import SSID, PW                      
+from wlansecrets import SSID, PW
+# import os, gc                      
 import urequests   # aus UIFlow abgeguckt
 import json
 import ntptime
-import sys
 
 lcd.setRotation(3)
 
@@ -163,7 +155,7 @@ def write_log(mode, text):
         print('kein Eintrag in logdatei möglich!')
     
 
-
+  
 
 ##########################################
 # Neueste Version bei Github abfragen.
@@ -179,8 +171,6 @@ def github_version_holen(repo):
     except:
         write_log(1, 'Latest Versionsnummer für ' + job['file'] + ' konnte nicht geholt werden!')
         print('Latest Versionsnummer konnte nicht geholt werden!')
-        sauber_machen()
-        sys.exit()
         return FEHLER
 
 ##################################################
@@ -199,8 +189,6 @@ def lokale_version_holen(file_name):
     except:
         write_log(1, 'Lokale Versionsnummer für ' + job['file'] + ' konnte nicht geholt werden!')
         print('Aktuelle Versionsnummer wurde nicht gefunden!')
-        sauber_machen()
-        sys.exit()
         return FEHLER
 
 ##################################################
@@ -234,9 +222,9 @@ while not wlan.isconnected():
     time_out -= 1
     if time_out == 0:
         write_log(0, 'Wlan nicht gefunden.')
-        sauber_machen()
-        sys.exit()
-
+        break
+    # Hier muss das ganze Programm abgebrochen werden
+    # und ein entsprechender Log-Eintrag erstellt werden.
 
 print(wlan.ifconfig()[0])
     
@@ -271,10 +259,7 @@ try:
 #     write_log('job.json wurde geladen.')
 except:
     write_log(1, 'job.json konnte nicht geladen werden.')
-    sauber_machen()
-    sys.exit()
 # Update abbrechen
-
     print('Job-File nicht gefunden')
 
 ############################
@@ -289,22 +274,23 @@ try:
 except:
     write_log(1, 'current_versions.json konnte nicht geladen werden!')
     print('versionsliste konnte nicht geladen werden!')
-    sauber_machen()
-    sys.exit()
 
 ###########################
 # Job Loop abarbeiten.
 ###########################
 
-for job in jobs:        
+for job in jobs:    
+    
     github_version = github_version_holen(job['repo'])
-    lokale_version = lokale_version_holen(job['file'])
-    if github_version > lokale_version:
-        software_holen(job['repo'], job['file'], job['ziel'])
-        versionsliste[job['file']] = github_version
-        write_log(1, job['file'] + ' wurde von ' + lokale_version + ' auf ' + github_version + ' aktualisiert.')
-    else:
-        write_log(1, job['file'] + ' ist noch aktuell.')
+    if github_version != FEHLER:
+        lokale_version = lokale_version_holen(job['file'])
+        if lokale_version != FEHLER:
+            if github_version > lokale_version:
+                software_holen(job['repo'], job['file'], job['ziel'])
+                versionsliste[job['file']] = github_version
+                write_log(job['file'] + ' wurde von ' + lokale_version + ' auf ' + github_version + ' aktualisiert.')
+            else:
+                write_log(1, job['file'] + ' ist noch aktuell.')
 
 try:
     f = open('current_versions.json', 'w')
@@ -318,24 +304,6 @@ except:
 
 write_log(1, 'Updateprozess beendet.')
 
-##################################
-# Alle Objekte die nicht mehr
-# gebraucht werden entfernen.
-##################################
-
-objekts = [machine, time, network, SSID, PW, urequests, json, write_log, github_version_holen,
-           lokale_version_holen, software_holen, jobs, json.loads]
-
-def sauber_machen():
-    for o in objekts:
-        try:
-            del(o)
-        except:
-            pass
-   
-  
-print(gc.mem_free())
 # Aufräumen
-sauber_machen()
-gc.collect()
-print(gc.mem_free())
+
+
