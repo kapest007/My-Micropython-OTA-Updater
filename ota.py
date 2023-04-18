@@ -13,7 +13,7 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.035'
+version = '00.00.036'
 date = '18.04.2023'
 author = 'Peter Stöck'
 
@@ -25,6 +25,9 @@ author = 'Peter Stöck'
 
 
 # Versionen:
+# 00.00.036:
+# Es wurde eine feste IP-Adresse (192.168.5.32) eingerichtet.
+#
 # 00.00.035:
 # Es wurde der Code entfernt, der nur zum Testen
 # eingebaut wurde.
@@ -243,6 +246,8 @@ def software_holen(repo, file_name, ziel_name):
 
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
+
+wlan.ifconfig(('192.168.5.32', '255.255.255.0', '192.168.5.1', '192.168.5.1'))
 
 wlan.connect(SSID, PW)
 time_out = 10
