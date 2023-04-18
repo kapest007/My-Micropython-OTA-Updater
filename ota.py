@@ -13,12 +13,11 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.034'
+version = '00.00.035'
 date = '18.04.2023'
 author = 'Peter Stöck'
 
 # TODO:
-# Aufräumen. OTA-Objekte entfernen.
 # Für V2:
 #     Verzeichnis Wechsel bei MP und Github.
 #     RTC stellen.
@@ -26,6 +25,10 @@ author = 'Peter Stöck'
 
 
 # Versionen:
+# 00.00.035:
+# Es wurde der Code entfernt, der nur zum Testen
+# eingebaut wurde.
+#
 # 00.00.034:
 # Aufräumen funktioniert. Gibt 21360 Bytes frei.
 #
@@ -144,19 +147,16 @@ author = 'Peter Stöck'
 # Das Isolieren der Versionsnummer als String funktioniert!
 
 
-import gc
-print(gc.mem_free())
-
 # Imports
 
 from m5stack import *
 from m5ui import *
 from uiflow import *
+import gc
 import machine
 import time
 import network
-from wlansecrets import SSID, PW
-                     
+from wlansecrets import SSID, PW                     
 import urequests   # aus UIFlow abgeguckt
 import json
 import ntptime
@@ -182,7 +182,6 @@ def write_log(text):
             f.write(text + '\n')
         f.close()
     except:
-        print('kein Eintrag in logdatei möglich!')
         pass
 
   
@@ -195,13 +194,11 @@ def github_version_holen(repo):
     global abbruch
     try:
         req = urequests.request(method='GET', url='https://api.github.com/repos/' + repo + '/releases/latest', headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
-        gh_json = json.loads((req.text))  # Die Daten liegen als JSON vor.
+        gh_json = json.loads((req.text))
         github_version = gh_json['tag_name']
-        print(github_version)
         return github_version
     except:
         write_log('Latest Versionsnummer für ' + job['file'] + ' konnte nicht geholt werden!')
-        print('Latest Versionsnummer konnte nicht geholt werden!')
         abbruch = True
         return FEHLER
 
@@ -217,11 +214,9 @@ def lokale_version_holen(file_name):
         f.close()
         current_versions = json.loads(current_versions)
         current_version = current_versions[file_name]
-        print(current_version)
         return current_version
     except:
         write_log('Lokale Versionsnummer für ' + job['file'] + ' konnte nicht geholt werden!')
-        print('Aktuelle Versionsnummer wurde nicht gefunden!')
         abbruch = True
         return FEHLER
 
@@ -258,10 +253,8 @@ while not wlan.isconnected():
         write_log('Wlan nicht gefunden.')
         abbruch = True
         break
-    # Hier muss das ganze Programm abgebrochen werden
-    # und ein entsprechender Log-Eintrag erstellt werden.
 
-print(wlan.ifconfig()[0])
+write_log('IP: '+ wlan.ifconfig()[0])
     
 ##########################################
 # Mit NTP verbinden, um Zeitstempel
@@ -295,11 +288,9 @@ try:
     f = open('job.json', 'r')
     jobs = json.loads(f.read())
     f.close()
-#     write_log('job.json wurde geladen.')
 except:
     write_log('job.json konnte nicht geladen werden.')
     abbruch = True
-    print('Job-File nicht gefunden')
 
 ############################
 # Versionsliste holen
@@ -313,7 +304,6 @@ try:
 except:
     write_log('current_versions.json konnte nicht geladen werden!')
     abbruch = True
-    print('versionsliste konnte nicht geladen werden!')
 
 ###########################
 # Job Loop abarbeiten.
@@ -353,20 +343,16 @@ if abbruch == False:
     #     write_log('aktualisierte current_versions.json wurde gespeichert.')
     except:
         write_log('current_versions.json konnte nicht gespeichert werden!')
-        print('current_versions.json konnte nicht gespeichert werden!')
    
 if abbruch == False:
     write_log('Updateprozess erfolgreich beendet.')
 else:
     write_log('Updateprozess abgebrochen!')
 
-
-
-print(gc.mem_free())
-
-
-
+##########################
 # Aufräumen
+##########################
+
 zu_entsorgen = [
                 name,
                 version,
@@ -399,19 +385,12 @@ def entsorgen():
             del(x)            
         except:
             recycled += 1
-#            pass
         
         
 entsorgen()
 gc.collect()
-
-
-print('Nicht gelöscht : ', recycled)
-print(gc.mem_free())
-
 del(zu_entsorgen)
 del(entsorgen)
 gc.collect()
 
-print(gc.mem_free())
-
+print(wlan.ifconfig()[0])
