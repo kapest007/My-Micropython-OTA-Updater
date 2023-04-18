@@ -14,6 +14,7 @@ wird diese heruntergeladen und als **main.py** gespeichert.~~
 # Dieses Projekt ist noch in der Entwicklung! 
 
 ## Entwicklungsstand:
+Das Script tut im wesentlichen was es soll und wird demnächst zu Version v01.00.000 werden.
 Das Script prüft für alle in **job.json** enthaltenen Dateien ob bei Github neue Versionen vorhanden sind. Ist das der Fall, so werden die vorhandenen damit ersetzt. Am Ende werden die hierfür erforderlichen Objekte gelöscht und eine Garbage Collection durchgeführt. Dadurch werden ca. **20kB Speicher** freigegeben.
 
 Die Wlanverbindung gleibt erhalten. Die **IP-Adresse** befindet sich in **wlan.ifconfig[0]**.
