@@ -202,8 +202,6 @@ try:
     dc = f.read()
     f.close()
     dev_config = json.loads(dc)
-    del(dc)
-    gc.collect()
 except:
     write_log('dev_config.json konnte nicht geholt werden!')
     abbruch = True  
@@ -397,13 +395,13 @@ zu_entsorgen = [
                 github_version,
                 jobs,
                 versionsliste,
+                dc,
                ]
 
 recycled = 0
 
 def entsorgen():
     global recycled
-    print('Objekte werden gelöscht.')
     for x in zu_entsorgen:
         try:
             del(x)            
@@ -412,7 +410,7 @@ def entsorgen():
         
         
 entsorgen()
-gc.collect()
+
 del(zu_entsorgen)
 del(entsorgen)
 gc.collect()
