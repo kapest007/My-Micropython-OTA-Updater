@@ -13,19 +13,22 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.033'
+version = '00.00.034'
 date = '18.04.2023'
 author = 'Peter Stöck'
 
 # TODO:
-# Abbruchbedingung für Wlan Anmeldung
-# RTC stellen.
 # Aufräumen. OTA-Objekte entfernen.
-# Für V2: Verzeichnis Wechsel bei MP und Github.
+# Für V2:
+#     Verzeichnis Wechsel bei MP und Github.
+#     RTC stellen.
 
 
 
 # Versionen:
+# 00.00.034:
+# Aufräumen beginnen.
+#
 # 00.00.033:
 # Fehlerbehandlung getestet und OK.
 #
@@ -140,6 +143,10 @@ author = 'Peter Stöck'
 # Das Abholen der Daten bei Github funktioniert.
 # Das Isolieren der Versionsnummer als String funktioniert!
 
+
+import gc
+print(gc.mem_free())
+
 # Imports
 
 from m5stack import *
@@ -149,7 +156,7 @@ import machine
 import time
 import network
 from wlansecrets import SSID, PW
-# import os, gc                      
+                     
 import urequests   # aus UIFlow abgeguckt
 import json
 import ntptime
@@ -353,6 +360,58 @@ if abbruch == False:
 else:
     write_log('Updateprozess abgebrochen!')
 
-# Aufräumen
 
+
+print(gc.mem_free())
+
+
+
+# Aufräumen
+zu_entsorgen = [
+                name,
+                version,
+                date,
+                author,
+                FEHLER,
+                abbruch,
+                ntp_ok,
+                machine,
+                time,
+                urequests,
+                json,
+                ntptime,
+                write_log,
+                github_version_holen,
+                lokale_version_holen,
+                software_holen,
+                github_version,
+                jobs,
+                versionsliste,
+               ]
+
+recycled = 0
+
+def entsorgen():
+    global recycled
+    print('Objekte werden gelöscht.')
+    for x in zu_entsorgen:
+        try:
+            del(x)            
+        except:
+            recycled += 1
+#            pass
+        
+        
+entsorgen()
+gc.collect()
+
+
+print('Nicht gelöscht : ', recycled)
+print(gc.mem_free())
+
+del(zu_entsorgen)
+del(entsorgen)
+gc.collect()
+
+print(gc.mem_free())
 
