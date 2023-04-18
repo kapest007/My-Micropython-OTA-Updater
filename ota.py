@@ -13,7 +13,7 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.036'
+version = '00.00.037'
 date = '18.04.2023'
 author = 'Peter Stöck'
 
@@ -25,6 +25,11 @@ author = 'Peter Stöck'
 
 
 # Versionen:
+# 00.00.037:
+# Die dev_config.json wird eingeführt.
+# Diese Datei enthält ein Dictionary mit
+# config Daten dieses Gerätes.
+#
 # 00.00.036:
 # Es wurde eine feste IP-Adresse (192.168.5.32) eingerichtet.
 #
@@ -187,7 +192,21 @@ def write_log(text):
     except:
         pass
 
+
+##########################################
+# Geräte Definitionen laden.
+##########################################
   
+try:
+    f = open('dev_config.json','r')
+    dc = f.read()
+    f.close()
+    dev_config = json.loads(dc)
+    del(dc)
+    gc.collect()
+except:
+    write_log('dev_config.json konnte nicht geholt werden!')
+    abbruch = True  
 
 ##########################################
 # Neueste Version bei Github abfragen.
@@ -247,7 +266,7 @@ def software_holen(repo, file_name, ziel_name):
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 
-wlan.ifconfig(('192.168.5.32', '255.255.255.0', '192.168.5.1', '192.168.5.1'))
+wlan.ifconfig((dev_config['fixIP'], '255.255.255.0', '192.168.5.1', '192.168.5.1'))
 
 wlan.connect(SSID, PW)
 time_out = 10
