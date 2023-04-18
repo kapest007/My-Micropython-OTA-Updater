@@ -414,5 +414,3 @@ entsorgen()
 del(zu_entsorgen)
 del(entsorgen)
 gc.collect()
-
-print(wlan.ifconfig()[0])
