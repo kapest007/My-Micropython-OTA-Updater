@@ -13,7 +13,7 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.032'
+version = '00.00.033'
 date = '18.04.2023'
 author = 'Peter Stöck'
 
@@ -26,6 +26,9 @@ author = 'Peter Stöck'
 
 
 # Versionen:
+# 00.00.033:
+# Fehlerbehandlung getestet und OK.
+#
 # 00.00.032:
 # Variale abbruch eingeführt. Sorgt für Programmabbruch.
 # Variable ntp_ok gibt an, ob NTP zur Verfügung steht.
@@ -181,7 +184,8 @@ def write_log(text):
 # Neueste Version bei Github abfragen.
 ##########################################
 
-def github_version_holen(repo): 
+def github_version_holen(repo):
+    global abbruch
     try:
         req = urequests.request(method='GET', url='https://api.github.com/repos/' + repo + '/releases/latest', headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
         gh_json = json.loads((req.text))  # Die Daten liegen als JSON vor.
@@ -199,6 +203,7 @@ def github_version_holen(repo):
 ##################################################
 
 def lokale_version_holen(file_name):
+    global abbruch
     try:
         f = open('current_versions.json','r')
         current_versions = f.read()
@@ -320,6 +325,10 @@ if abbruch == False:
                         write_log( job['file'] + ' wurde von ' + lokale_version + ' auf ' + github_version + ' aktualisiert.')
                     else:
                         write_log(job['file'] + ' ist noch aktuell.')
+                else:
+                    break
+            else:
+                break
         else:
             break
 
@@ -329,14 +338,15 @@ if abbruch == False:
 # merken.
 #########################################
 
-try:
-    f = open('current_versions.json', 'w')
-    f.write(json.dumps(versionsliste))
-    f.close()
-#     write_log('aktualisierte current_versions.json wurde gespeichert.')
-except:
-    write_log('current_versions.json konnte nicht gespeichert werden!')
-    print('current_versions.json konnte nicht gespeichert werden!')
+if abbruch == False:
+    try:
+        f = open('current_versions.json', 'w')
+        f.write(json.dumps(versionsliste))
+        f.close()
+    #     write_log('aktualisierte current_versions.json wurde gespeichert.')
+    except:
+        write_log('current_versions.json konnte nicht gespeichert werden!')
+        print('current_versions.json konnte nicht gespeichert werden!')
    
 if abbruch == False:
     write_log('Updateprozess erfolgreich beendet.')
