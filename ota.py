@@ -27,7 +27,7 @@ author = 'Peter Stöck'
 
 # Versionen:
 # 00.00.034:
-# Aufräumen beginnen.
+# Aufräumen funktioniert. Gibt 21360 Bytes frei.
 #
 # 00.00.033:
 # Fehlerbehandlung getestet und OK.
