@@ -13,7 +13,7 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.037'
+version = '00.00.038'
 date = '18.04.2023'
 author = 'Peter Stöck'
 
@@ -25,6 +25,10 @@ author = 'Peter Stöck'
 
 
 # Versionen:
+# 00.00.038:
+# Wenn log.txt nicht existiert
+# wird sie von write_log() angelegt.
+#
 # 00.00.037:
 # Die dev_config.json wird eingeführt.
 # Diese Datei enthält ein Dictionary mit
@@ -190,7 +194,12 @@ def write_log(text):
             f.write(text + '\n')
         f.close()
     except:
-        pass
+        f = open('log.txt', 'w')
+        if ntp_ok == True:
+            f.write(ntp.formatDatetime('-', ':') + ' - ' + text + '\n')
+        else:
+            f.write(text + '\n')
+        f.close()
 
 
 ##########################################
