@@ -1,6 +1,6 @@
 # Micropython Script Update Over The Air
 
-# Basisierend auf MicroPython OTA Updater
+# Basierend auf MicroPython OTA Updater
 # von Ronald Dehuysser
 # https://github.com/rdehuyss/micropython-ota-updater
 
