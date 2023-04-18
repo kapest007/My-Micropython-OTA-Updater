@@ -13,7 +13,7 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.030'
+version = '00.00.031'
 date = '18.04.2023'
 author = 'Peter Stöck'
 
@@ -26,6 +26,9 @@ author = 'Peter Stöck'
 
 
 # Versionen:
+# 00.00.031:
+# Erster commit in Fehlerbehandlung.
+#
 # 00.00.030:
 # Kleiner Versionssprung. Der Versuch das Programm aus
 # verschiedenen Stellen bei essentiellen Fehlern mit sys.exit()
