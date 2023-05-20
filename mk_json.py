@@ -38,7 +38,7 @@ var_name = [
 current_versions = [
             {
                 'ota.py': 'v00.00.000',
-                'Home_Markiese.py': 'v00.00.000'
+                'Markiese.py': 'v00.00.000'
             }
            ]
 
@@ -49,8 +49,8 @@ jobs = [
                 'ziel' : 'boot.py'
             }, 
             {
-                'repo' : 'kapest007/HOME_Markiese',
-                'file' : 'Home_Markiese.py',
+                'repo' : 'kapest007/Markiese',
+                'file' : 'Markiese.py',
                 'ziel' : 'main.py'
             }
             
@@ -59,7 +59,6 @@ jobs = [
 dev_config = [
             {
                 "dev_typ": "M5ATOM Lite",
-                "": "",
                 "dev_name": "Markiese",
                 "fixIP": "192.168.5.32"
             }

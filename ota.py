@@ -380,46 +380,4 @@ if abbruch == False:
 else:
     write_log('Updateprozess abgebrochen!')
 
-##########################
-# Aufräumen
-##########################
 
-# zu_entsorgen = [
-#                 name,
-#                 version,
-#                 date,
-#                 author,
-#                 FEHLER,
-#                 abbruch,
-#                 ntp_ok,
-#                 machine,
-#                 time,
-#                 urequests,
-#                 json,
-#                 ntptime,
-#                 write_log,
-#                 github_version_holen,
-#                 lokale_version_holen,
-#                 software_holen,
-#                 github_version,
-#                 jobs,
-#                 versionsliste,
-#                 dc,
-#                ]
-# 
-# recycled = 0
-# 
-# def entsorgen():
-#     global recycled
-#     for x in zu_entsorgen:
-#         try:
-#             del(x)            
-#         except:
-#             recycled += 1
-#         
-#         
-# entsorgen()
-# 
-# del(zu_entsorgen)
-# del(entsorgen)
-# gc.collect()
