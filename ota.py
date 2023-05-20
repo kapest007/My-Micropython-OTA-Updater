@@ -242,7 +242,7 @@ def lokale_version_holen(file_name):
         current_versions = f.read()
         f.close()
         current_versions = json.loads(current_versions)
-        current_version = current_versions[file_name]
+        current_version = current_versions[0][file_name]
         return current_version
     except:
         write_log('Lokale Versionsnummer für ' + job['file'] + ' konnte nicht geholt werden!')
@@ -273,7 +273,7 @@ def software_holen(repo, file_name, ziel_name):
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 
-wlan.ifconfig((dev_config['fixIP'], '255.255.255.0', '192.168.5.1', '192.168.5.1'))
+wlan.ifconfig((dev_config[0]['fixIP'], '255.255.255.0', '192.168.5.1', '192.168.5.1'))
 
 wlan.connect(SSID, PW)
 time_out = 10
@@ -316,11 +316,11 @@ write_log('Update wird begonnen.')
 #############################
 
 try:
-    f = open('job.json', 'r')
+    f = open('jobs.json', 'r')
     jobs = json.loads(f.read())
     f.close()
 except:
-    write_log('job.json konnte nicht geladen werden.')
+    write_log('jobs.json konnte nicht geladen werden.')
     abbruch = True
 
 ############################
@@ -384,42 +384,42 @@ else:
 # Aufräumen
 ##########################
 
-zu_entsorgen = [
-                name,
-                version,
-                date,
-                author,
-                FEHLER,
-                abbruch,
-                ntp_ok,
-                machine,
-                time,
-                urequests,
-                json,
-                ntptime,
-                write_log,
-                github_version_holen,
-                lokale_version_holen,
-                software_holen,
-                github_version,
-                jobs,
-                versionsliste,
-                dc,
-               ]
-
-recycled = 0
-
-def entsorgen():
-    global recycled
-    for x in zu_entsorgen:
-        try:
-            del(x)            
-        except:
-            recycled += 1
-        
-        
-entsorgen()
-
-del(zu_entsorgen)
-del(entsorgen)
-gc.collect()
+# zu_entsorgen = [
+#                 name,
+#                 version,
+#                 date,
+#                 author,
+#                 FEHLER,
+#                 abbruch,
+#                 ntp_ok,
+#                 machine,
+#                 time,
+#                 urequests,
+#                 json,
+#                 ntptime,
+#                 write_log,
+#                 github_version_holen,
+#                 lokale_version_holen,
+#                 software_holen,
+#                 github_version,
+#                 jobs,
+#                 versionsliste,
+#                 dc,
+#                ]
+# 
+# recycled = 0
+# 
+# def entsorgen():
+#     global recycled
+#     for x in zu_entsorgen:
+#         try:
+#             del(x)            
+#         except:
+#             recycled += 1
+#         
+#         
+# entsorgen()
+# 
+# del(zu_entsorgen)
+# del(entsorgen)
+# gc.collect()
