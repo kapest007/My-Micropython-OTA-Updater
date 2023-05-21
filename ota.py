@@ -13,8 +13,8 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.038'
-date = '18.04.2023'
+version = '00.00.039'
+date = '21.05.2023'
 author = 'Peter Stöck'
 
 # TODO:
@@ -25,6 +25,11 @@ author = 'Peter Stöck'
 
 
 # Versionen:
+# 00.00.039:
+# logeinträgen wird </br> zur HTML Darstellung angefügt.
+# IP wird auf 192.168.5.250 geändert, damit parallel zum
+# laufenden Betrieb eines Gerätes weiterentwickelt werden kann.
+#
 # 00.00.038:
 # Wenn log.txt nicht existiert
 # wird sie von write_log() angelegt.
