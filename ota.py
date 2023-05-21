@@ -13,7 +13,7 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.040'
+version = '00.00.041'
 date = '21.05.2023'
 author = 'Peter Stöck'
 
@@ -25,6 +25,16 @@ author = 'Peter Stöck'
 
 
 # Versionen:
+# 00.00.041:
+# Updater funktionierte nicht richtig.
+# Beim lesen und schreiben der System-Files
+# gab es wohl Probleme.
+# Das Lesen und Schreiben von
+# - current_version.jason
+# - dev_condig.json und
+# - jobs.json
+# wird in Funktionen verlegt.
+#
 # 00.00.040:
 # Markiese Update funktioniert nicht.
 # print() in github_version_holen() und lokale_version_holen()
@@ -211,19 +221,77 @@ def write_log(text):
             f.write(text + '\n')
         f.close()
 
+################################## Files mit Betriebsdaten laden ############################
 
 ##########################################
 # Geräte Definitionen laden.
 ##########################################
-  
-try:
-    f = open('dev_config.json','r')
-    dc = f.read()
-    f.close()
-    dev_config = json.loads(dc)
-except:
-    write_log('dev_config.json konnte nicht geholt werden!')
-    abbruch = True  
+def device_liste_holen():
+    global abbruch
+    try:
+        f = open('dev_config.json','r')
+        dc = f.read()
+        f.close()
+        dc = json.loads(dc)
+        return dc[0]
+    except:
+        write_log('dev_config.json konnte nicht geholt werden!')
+        abbruch = True
+        
+############################################
+# Versionsliste holen / zurück schreiben
+############################################
+def versionliste_holen():
+    global abbruch
+    try:
+        f = open('current_versions.json', 'r')
+        vl = f.read()
+        f.close()
+        vl = json.loads(vl)
+        versionsliste = vl[0]
+        return versionsliste
+    #     write_log('current_versions.json wurde geladen.')
+    except:
+        write_log('current_versions.json konnte nicht geladen werden!')
+        abbruch = True        
+    
+
+def versionsliste_speichern(versionsliste):
+    global abbruch
+    try:
+        f = open('current_versions.json', 'w')
+        vl = [versionsliste]
+        f.write(json.dumps(vl))
+        f.close()
+    #     write_log('current_versions.json wurde geladen.')
+    except:
+        write_log('current_versions.json konnte nicht gespeichert werden!')
+        abbruch = True        
+
+
+#############################
+# job.json laden
+#############################
+def jobs_laden():
+    global abbruch
+    try:
+        f = open('jobs.json', 'r')
+        jobs = json.loads(f.read())
+        f.close()
+    except:
+        write_log('jobs.json konnte nicht geladen werden.')
+        abbruch = True
+    return jobs
+
+###########################
+# Listen holen
+###########################
+
+dev_config = device_liste_holen()
+current_versions = versionliste_holen()
+jobs = jobs_laden()
+
+################################## Versionen bearbeiten ###################################
 
 ##########################################
 # Neueste Version bei Github abfragen.
@@ -248,15 +316,10 @@ def github_version_holen(repo):
 ##################################################
 
 def lokale_version_holen(file_name):
-    global abbruch
+    global abbruch, current_versions
     try:
-        f = open('current_versions.json','r')
-        current_versions = f.read()
-        f.close()
-        current_versions = json.loads(current_versions)
-        current_version = current_versions[0][file_name]
-        print('Locale Version: '+current_version)
-        time.sleep_ms(500)
+        current_version = current_versions[file_name]
+        print('Locale Version:  '+ current_version)
         return current_version
     except:
         write_log('Lokale Versionsnummer für ' + job['file'] + ' konnte nicht geholt werden!')
@@ -280,6 +343,9 @@ def software_holen(repo, file_name, ziel_name):
     f.close()
 
 
+
+
+
 ##########################################
 # Wlan einrichten und verbinden:
 ##########################################
@@ -287,7 +353,7 @@ def software_holen(repo, file_name, ziel_name):
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 
-wlan.ifconfig((dev_config[0]['fixIP'], '255.255.255.0', '192.168.5.1', '192.168.5.1'))
+wlan.ifconfig((dev_config['fixIP'], '255.255.255.0', '192.168.5.1', '192.168.5.1'))
 
 wlan.connect(SSID, PW)
 time_out = 10
@@ -320,35 +386,10 @@ except:
 # wird später implementiert.
 
 ###################################################
-# Hauptschleife
+# Hauptprogramm
 ###################################################
 
 write_log('Update wird begonnen.')
-
-#############################
-# job.json laden
-#############################
-
-try:
-    f = open('jobs.json', 'r')
-    jobs = json.loads(f.read())
-    f.close()
-except:
-    write_log('jobs.json konnte nicht geladen werden.')
-    abbruch = True
-
-############################
-# Versionsliste holen
-############################
-
-try:
-    f = open('current_versions.json', 'r')
-    versionsliste = json.loads(f.read())
-    f.close()
-#     write_log('current_versions.json wurde geladen.')
-except:
-    write_log('current_versions.json konnte nicht geladen werden!')
-    abbruch = True
 
 ###########################
 # Job Loop abarbeiten.
@@ -356,6 +397,7 @@ except:
 
 if abbruch == False:
     for job in jobs:
+        write_log('Update für ' + str(job['file']))
         if abbruch == False:
             github_version = github_version_holen(job['repo'])
             if github_version != FEHLER:
@@ -363,7 +405,7 @@ if abbruch == False:
                 if lokale_version != FEHLER:
                     if github_version > lokale_version:
                         software_holen(job['repo'], job['file'], job['ziel'])
-                        versionsliste[job['file']] = github_version
+                        current_versions[job['file']] = github_version
                         write_log( job['file'] + ' wurde von ' + lokale_version + ' auf ' + github_version + ' aktualisiert.')
                     else:
                         write_log(job['file'] + ' ist noch aktuell.')
@@ -381,15 +423,7 @@ if abbruch == False:
 #########################################
 
 if abbruch == False:
-    try:
-        f = open('current_versions.json', 'w')
-        f.write(json.dumps(versionsliste))
-        f.close()
-    #     write_log('aktualisierte current_versions.json wurde gespeichert.')
-    except:
-        write_log('current_versions.json konnte nicht gespeichert werden!')
-   
-if abbruch == False:
+    versionsliste_speichern(current_versions)
     write_log('Updateprozess erfolgreich beendet.')
 else:
     write_log('Updateprozess abgebrochen!')

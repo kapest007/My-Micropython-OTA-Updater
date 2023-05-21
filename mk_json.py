@@ -60,7 +60,7 @@ dev_config = [
             {
                 "dev_typ": "M5ATOM Lite",
                 "dev_name": "Markiese",
-                "fixIP": "192.168.5.32"
+                "fixIP": "192.168.5.250"
             }
            ]
 
