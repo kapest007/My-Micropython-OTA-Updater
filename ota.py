@@ -13,7 +13,7 @@
 # actver.py  - enthält die aktuelle Version (String gemäß Github Tag)
 
 name = 'ota.py'
-version = '00.00.039'
+version = '00.00.040'
 date = '21.05.2023'
 author = 'Peter Stöck'
 
@@ -25,6 +25,11 @@ author = 'Peter Stöck'
 
 
 # Versionen:
+# 00.00.040:
+# Markiese Update funktioniert nicht.
+# print() in github_version_holen() und lokale_version_holen()
+# mit 500ms Verzögerung eingebaut.
+#
 # 00.00.039:
 # logeinträgen wird </br> zur HTML Darstellung angefügt.
 # IP wird auf 192.168.5.250 geändert, damit parallel zum
@@ -230,6 +235,8 @@ def github_version_holen(repo):
         req = urequests.request(method='GET', url='https://api.github.com/repos/' + repo + '/releases/latest', headers={'Content-Type': 'text/html', 'User-Agent': 'kapest007'})
         gh_json = json.loads((req.text))
         github_version = gh_json['tag_name']
+        print('Github Version: '+github_version)
+        time.sleep_ms(500)
         return github_version
     except:
         write_log('Latest Versionsnummer für ' + job['file'] + ' konnte nicht geholt werden!')
@@ -248,6 +255,8 @@ def lokale_version_holen(file_name):
         f.close()
         current_versions = json.loads(current_versions)
         current_version = current_versions[0][file_name]
+        print('Locale Version: '+current_version)
+        time.sleep_ms(500)
         return current_version
     except:
         write_log('Lokale Versionsnummer für ' + job['file'] + ' konnte nicht geholt werden!')
@@ -278,8 +287,7 @@ def software_holen(repo, file_name, ziel_name):
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 
-# wlan.ifconfig((dev_config[0]['fixIP'], '255.255.255.0', '192.168.5.1', '192.168.5.1'))
-wlan.ifconfig(('192.168.5.250', '255.255.255.0', '192.168.5.1', '192.168.5.1'))
+wlan.ifconfig((dev_config[0]['fixIP'], '255.255.255.0', '192.168.5.1', '192.168.5.1'))
 
 wlan.connect(SSID, PW)
 time_out = 10
