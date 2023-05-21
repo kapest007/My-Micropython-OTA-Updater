@@ -189,7 +189,7 @@ def write_log(text):
     try:
         f = open('log.txt', 'a')
         if ntp_ok == True:
-            f.write(ntp.formatDatetime('-', ':') + ' - ' + text + '\n')
+            f.write(ntp.formatDatetime('-', ':') + ' - ' + text + '</br>\n')
         else:
             f.write(text + '\n')
         f.close()
@@ -273,7 +273,8 @@ def software_holen(repo, file_name, ziel_name):
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
 
-wlan.ifconfig((dev_config[0]['fixIP'], '255.255.255.0', '192.168.5.1', '192.168.5.1'))
+# wlan.ifconfig((dev_config[0]['fixIP'], '255.255.255.0', '192.168.5.1', '192.168.5.1'))
+wlan.ifconfig(('192.168.5.250', '255.255.255.0', '192.168.5.1', '192.168.5.1'))
 
 wlan.connect(SSID, PW)
 time_out = 10
